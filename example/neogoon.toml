@@ -1,0 +1,119 @@
+[infection]
+start-on-boot = false
+hide-systray = false
+
+# When hibernate is enabled, Neogoon will not immediately begin executing
+# payloads when Start is clicked. Instead, it will wait for a random amount
+# of time (within a defined range), execute payloads for a set amount of time,
+# and then go back to hibernating.
+[hibernate]
+enabled = true
+# In seconds, the minimum amount of time Neogoon will sit idley before doing
+# anything.
+minimum-wait = 1
+# Same story, but the maximum time.
+maximum-wait = 120
+# How long (again, in seconds) Neogoon will execute payloads for while out of
+# hibernation.
+activity-time = 120
+
+# Annoyances are the core of Neogoon - they define the audiovisual (and more)
+# effects it will have on your computer.
+[annoyances]
+enabled = true
+# Every tick, Neogoon will select a payload to execute based on the % chance of
+# running they've been given. So a payload with a 100% occurrence chance will
+# execute once per second when seconds-per-tick is 1, once every two seconds
+# when it is 2, and so on.
+# Annoyances can stack. If two annoyances have a 100% chance to occur, they will
+# both occur every tick.
+seconds-per-tick = 1
+
+# Popups are immovable windows that appear in random locations on your screen.
+# They can be configured to only be closed manually, or to close after a given
+# amount of time.
+[annoyances.popups]
+chance = 50
+# The media that may appear in popups.
+# Possible values are images, animated, and videos.
+media = ["images", "animated", "videos"]
+# Popup transparency. 100 is opaque, 1 is almost transparent.
+opacity = 100
+# % chance an image will be in "denial mode". An image selected to be in this
+# mode will appear blurred and captioned.
+denial-chance = 0
+# When timeout is non-zero, popups will automatically close after a fixed period
+# of time.
+timeout = 0
+# When set to true, a button will appear over popups that will close them.
+# If no timeout is set and allow-manual-closing is false, there will be no
+# way to close popups but to manually kill Neogoon.
+allow-manual-closing = true
+# % volume of popup videos
+volume = 25
+# Mitosis is a feature that opens a given number of new popups whenever one
+# is closed.
+[annoyances.popups.mitosis]
+# The number of new popups to spawn whenever one is closed.
+strength = 0
+# Whether or not popups closed by timing out should trigger mitosis.
+triggered-by-timeout = true
+
+# Prompts are immovable windows that will appear in random locations on your screen.
+# A random quote will be given, and the quote must be written into the text box below
+# the quote for the prompt to close.
+[annoyances.prompts]
+chance = 0
+# The maximum number of mistakes there can be from the original quote. Neogoon calculates
+# this based on the two text's Levenshtein distance - basically, a character occurring where
+# its not supposed to, or no character occurring where it's supposed to, penalises one point.
+# A character in the wrong place penalises two.
+max-mistakes = 2
+# levenshtein.DistanceForStrings
+
+# Audio annoyances play a random audio track.
+[annoyances.audio]
+# If a track is already playing when another audio annoyance is chosen, it is ignored and the
+# previous audio track continues.
+chance = 25
+# Audio tracks over this length (in seconds) will be stopped early.
+max-playtime = 15
+volume = 25
+
+# Auto-type will type out supplied phrases at random.
+[annoyances.auto-type]
+chance = 0
+# Whether auto-type should additionally automatically press enter after typing a phrase.
+press-enter = false
+
+# Overwrite clipboard will randomly overwrite your clipboard with supplied phrases.
+[annoyances.overwrite-clipboard]
+chance = 100
+
+# Drive filler fills your disk with images from a specified source.
+[drive-filler]
+enabled = true
+# The amount of time (in seconds) between each image save. This is a separate clock from
+# annoyances'.
+rate = 1
+# The path for drive-filler to fill. Neogoon will not try to save images in any directory
+# above this one - but it will select random subdirectories to save to.
+# A couple of substitutions are allowed here - if root is simply the character ~, it will
+# be replaced with your home directory (even on Windows).
+root = '~'
+# If the downloader is enabled, images will be grabbed from a specified booru and saved instead
+# of being taken from the loaded package.
+[drive-filler.downloader]
+enabled = true
+# Supported boorus are: e621
+booru = 'e621'
+# The tags to search the booru for. Whenever an image is grabbed to be saved, a random string
+# in this list will be chosen - that is, each string in this list can contain multiple tags,
+# each string will be searched for separately.
+# This can be empty; Neogoon will then accept any image.
+tags = [
+    'feral+paw_focus',
+    'feral+presenting_hindquarters'
+]
+# The minimum post score to consider
+minimum-score = 50
