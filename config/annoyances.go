@@ -1,8 +1,8 @@
 package config
 
 type Annoyances struct {
-	Enabled        bool `toml:"enabled"`
-	SecondsPerTick int  `toml:"seconds-per-tick"`
+	Enabled bool `toml:"enabled"`
+	Rate    int  `toml:"rate"`
 
 	// Annoyance configuration
 	Popups             Popups             `toml:"popups"`

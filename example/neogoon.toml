@@ -17,17 +17,35 @@ maximum-wait = 120
 # hibernation.
 activity-time = 120
 
+# The downloader can be used to save images from specified boorus matching specified tags.
+# When enabled, annoyances (see below) will source images from the downloader, rather than
+# the loaded set (if any).
+[downloader]
+enabled = true
+# Supported boorus are: e621
+booru = 'e621'
+# The tags to search the booru for. Whenever an image is grabbed to be saved, a random string
+# in this list will be chosen - that is, each string in this list can contain multiple tags,
+# each string will be searched for separately.
+# This can be empty; Neogoon will then accept any image.
+tags = [
+    'feral+paw_focus',
+    'feral+presenting_hindquarters'
+]
+# The minimum post score to consider
+minimum-score = 50
+
 # Annoyances are the core of Neogoon - they define the audiovisual (and more)
 # effects it will have on your computer.
 [annoyances]
 enabled = true
 # Every tick, Neogoon will select a payload to execute based on the % chance of
 # running they've been given. So a payload with a 100% occurrence chance will
-# execute once per second when seconds-per-tick is 1, once every two seconds
+# execute once per second when rate is 1, once every two seconds
 # when it is 2, and so on.
 # Annoyances can stack. If two annoyances have a 100% chance to occur, they will
 # both occur every tick.
-seconds-per-tick = 1
+rate = 1
 
 # Popups are immovable windows that appear in random locations on your screen.
 # They can be configured to only be closed manually, or to close after a given
@@ -69,7 +87,6 @@ chance = 0
 # its not supposed to, or no character occurring where it's supposed to, penalises one point.
 # A character in the wrong place penalises two.
 max-mistakes = 2
-# levenshtein.DistanceForStrings
 
 # Audio annoyances play a random audio track.
 [annoyances.audio]
@@ -90,6 +107,11 @@ press-enter = false
 [annoyances.overwrite-clipboard]
 chance = 100
 
+# Open websites randomly opens web pages.
+[annoyances.open-websites]
+enabled = true
+chance = 25
+
 # Drive filler fills your disk with images from a specified source.
 [drive-filler]
 enabled = true
@@ -98,22 +120,10 @@ enabled = true
 rate = 1
 # The path for drive-filler to fill. Neogoon will not try to save images in any directory
 # above this one - but it will select random subdirectories to save to.
-# A couple of substitutions are allowed here - if root is simply the character ~, it will
-# be replaced with your home directory (even on Windows).
+# A couple of substitutions are allowed here - the character ~ will be replaced with your home
+# directory, so ~/Desktop points to your desktop, even on Windows.
 root = '~'
-# If the downloader is enabled, images will be grabbed from a specified booru and saved instead
-# of being taken from the loaded package.
-[drive-filler.downloader]
-enabled = true
-# Supported boorus are: e621
-booru = 'e621'
-# The tags to search the booru for. Whenever an image is grabbed to be saved, a random string
-# in this list will be chosen - that is, each string in this list can contain multiple tags,
-# each string will be searched for separately.
-# This can be empty; Neogoon will then accept any image.
-tags = [
-    'feral+paw_focus',
-    'feral+presenting_hindquarters'
-]
-# The minimum post score to consider
-minimum-score = 50
+# When images are saved, they will be saved with a randomly chosen string from this list,
+# plus some random numbers.
+# Loaded sets can override this.
+filenames = ['NEOGOON']
