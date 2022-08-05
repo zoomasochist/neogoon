@@ -1,15 +1,15 @@
 package main
 
 import (
+	"fmt"
 	config "neogoon/config"
 	effects "neogoon/effects"
 	set "neogoon/set"
 	"os"
+	"path/filepath"
 	"runtime"
 
 	_ "embed"
-	"fmt"
-	"path/filepath"
 
 	"github.com/getlantern/systray"
 	"github.com/sqweek/dialog"
@@ -22,10 +22,13 @@ func main() {
 	if len(os.Args) != 1 && os.Args[1] == "--silent" {
 		var c config.Config
 		var s set.Set
-		_, err := LoadPreviousSettings(&c, &s)
-		if err != nil {
-			dialog.Message(err.Error()).Error()
-		}
+		prev, err := LoadPreviousSettings()
+
+		ErrIsFatal(err)
+		err = config.Load(&c, prev.Config)
+		ErrIsFatal(err)
+		err = set.Load(&s, prev.Set)
+		ErrIsFatal(err)
 
 		effects.Start(&c, &s)
 		<-chan int(nil)
@@ -35,73 +38,101 @@ func main() {
 }
 
 func Main() {
-	dialog.Message("Neogoon is ready - load configurations and packages via the tray icon.").Info()
+	var c config.Config
+	var s set.Set
+	var err error
 
 	systray.SetTitle("Neogoon")
 	systray.SetIcon(icon)
-	systrayStart := systray.AddMenuItem("Start", "Start Neogoon with the loaded settings.")
-	systrayStart.Disable()
+	systrayStart := systray.AddMenuItem("Start", "Start Neogoon with the configured settings.")
+	systray.AddSeparator()
+
 	systrayCurrentConfig := systray.AddMenuItem("Loaded config: (none)", "")
-	systrayCurrentPackage := systray.AddMenuItem("Loaded package: (none)", "")
+	systrayCurrentPackage := systray.AddMenuItem("Loaded set: (none)", "")
 	systrayCurrentConfig.Disable()
 	systrayCurrentPackage.Disable()
-	systrayLoadConfig := systray.AddMenuItem("Load Config", "Load Neogoon Configuration (.toml)")
-	systrayLoadPackage := systray.AddMenuItem("Load Package", "Load Edgeware Package (.zip)")
+
+	prev, err := LoadPreviousSettings()
+	ErrIsFatal(err)
+
+	var configPath string
+	var setPath string
+
+	if prev.Config == "" {
+		systrayStart.Disable()
+	} else {
+		configPath = prev.Config
+		filename := filepath.Base(prev.Config)
+		systrayCurrentConfig.SetTitle(fmt.Sprintln("Loaded config:", filename))
+	}
+
+	if prev.Set != "" {
+		setPath = prev.Set
+		filename := filepath.Base(prev.Set)
+		systrayCurrentPackage.SetTitle(fmt.Sprintln("Loaded set:", filename))
+	}
+
+	systray.AddSeparator()
+	systrayLoadConfig := systray.AddMenuItem("Load config", "Load Neogoon Configuration (.toml)")
+	systrayLoadPackage := systray.AddMenuItem("Load set", "Load Edgeware Package (.zip)")
 	systray.AddSeparator()
 	systrayQuit := systray.AddMenuItem("Quit", "Stop Neogoon")
 
-	var c config.Config
-	var s set.Set
-	/*var configPath string
-	var setPath string*/
-	var running bool
-	//var configLoaded bool
-
-	/*previous, err := LoadPreviousSettings(&c, &s)
-	ErrIsFatal(err)
-
-	if len(previous.Set) != 0 {
-		filename := filepath.Base(previous.Set)
-		systrayCurrentPackage.SetTitle(fmt.Sprintln("Loaded set:", filename))
-		ErrIsFatal(set.Load(&s, previous.Set))
-	}
-	if len(previous.Config) != 0 {
-		filename := filepath.Base(previous.Config)
-		configLoaded = true
-		systrayStart.Enable()
-		systrayCurrentConfig.SetTitle(fmt.Sprintln("Loaded config:", filename))
-		ErrIsFatal(config.Load(&c, previous.Config))
-	}
-	*/
+	dialog.Message("Neogoon is ready - load configurations and packages via the tray icon.").Info()
 
 	for {
 		select {
+		// "Start" was clicked
 		case <-systrayStart.ClickedCh:
-			running = true
 			systrayStart.SetTitle("Running")
 			systrayStart.Disable()
-			effects.Start(&c, &s)
-		case <-systrayLoadConfig.ClickedCh:
-			configPath, err := LoadConfig(&c)
+
+			err = config.Load(&c, configPath)
 			ErrIsFatal(err)
+
+			if setPath != "" {
+				err = set.Load(&s, setPath)
+				ErrIsFatal(err)
+			}
+
+			effects.Start(&c, &s)
+		// "Load Config" was clicked
+		case <-systrayLoadConfig.ClickedCh:
+			configPath, err = dialog.File().Filter("Neogoon Configuration File", "toml").Load()
+			if err != nil {
+				if err == dialog.ErrCancelled {
+					continue
+				}
+
+				ErrIsFatal(err)
+			}
 
 			filename := filepath.Base(configPath)
 			systrayCurrentConfig.SetTitle(fmt.Sprintln("Loaded config:", filename))
-			if !running {
-				systrayStart.Enable()
-			}
+			systrayStart.Enable()
 
-		case <-systrayLoadPackage.ClickedCh:
-			setPath, err := LoadSet(&s)
+			err = SaveSettings(configPath, setPath)
 			ErrIsFatal(err)
+
+		// "Load Set" was clicked
+		case <-systrayLoadPackage.ClickedCh:
+			setPath, err = dialog.File().Filter("Neogoon Set", "zip").Load()
+			if err != nil {
+				if err == dialog.ErrCancelled {
+					continue
+				}
+
+				ErrIsFatal(err)
+			}
 
 			filename := filepath.Base(setPath)
 			systrayCurrentPackage.SetTitle(fmt.Sprintln("Loaded set:", filename))
 
-		case <-systrayQuit.ClickedCh:
-			/*err := SaveSettings(configPath, setPath)
-			ErrIsFatal(err)*/
+			err = SaveSettings(configPath, setPath)
+			ErrIsFatal(err)
 
+		// "Quit" was clicked
+		case <-systrayQuit.ClickedCh:
 			systray.Quit()
 			runtime.Goexit()
 		}
@@ -110,37 +141,7 @@ func Main() {
 
 func ErrIsFatal(err error) {
 	if err != nil {
-		dialog.Message(err.Error()).Error()
+		dialog.Message("From main: ", err.Error()).Error()
+		os.Exit(1)
 	}
-}
-
-func LoadConfig(c *config.Config) (string, error) {
-	configPath, err := dialog.File().Filter("Neogoon Configuration File", "toml").Load()
-	if err != nil {
-		return "", err
-	}
-
-	err = config.Load(c, configPath)
-	if err != nil {
-		return "", err
-	}
-
-	// Normalise paths
-	c.DriveFiller.Root = filepath.FromSlash(c.DriveFiller.Root)
-
-	return configPath, nil
-}
-
-func LoadSet(s *set.Set) (string, error) {
-	setPath, err := dialog.File().Filter("Neogoon Set", "zip").Load()
-	if err != nil {
-		return setPath, err
-	}
-
-	err = set.Load(s, setPath)
-	if err != nil {
-		return setPath, err
-	}
-
-	return setPath, nil
 }

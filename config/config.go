@@ -1,6 +1,8 @@
 package config
 
 import (
+	"path/filepath"
+
 	"github.com/BurntSushi/toml"
 )
 
@@ -55,6 +57,9 @@ func Load(c *Config, filename string) error {
 	if err != nil {
 		return err
 	}
+
+	// Normalise paths
+	c.DriveFiller.Root = filepath.FromSlash(c.DriveFiller.Root)
 
 	return err
 }

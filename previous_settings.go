@@ -2,8 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	config "neogoon/config"
-	set "neogoon/set"
 	"os"
 	"path/filepath"
 )
@@ -13,7 +11,7 @@ type PreviousSettings struct {
 	Set    string
 }
 
-func LoadPreviousSettings(c *config.Config, s *set.Set) (PreviousSettings, error) {
+func LoadPreviousSettings() (PreviousSettings, error) {
 	dir, err := os.UserConfigDir()
 	if err != nil {
 		return PreviousSettings{}, err
@@ -21,10 +19,8 @@ func LoadPreviousSettings(c *config.Config, s *set.Set) (PreviousSettings, error
 
 	confPath := filepath.Join(dir, "neogoon.json")
 
-	if _, err = os.Stat(confPath); os.IsNotExist(err) {
+	if !FileExists(confPath) {
 		return PreviousSettings{}, nil
-	} else if err != nil {
-		return PreviousSettings{}, err
 	}
 
 	conf, err := os.ReadFile(confPath)
@@ -35,14 +31,6 @@ func LoadPreviousSettings(c *config.Config, s *set.Set) (PreviousSettings, error
 	var previousSettings PreviousSettings
 	err = json.Unmarshal(conf, &previousSettings)
 	if err != nil {
-		return PreviousSettings{}, err
-	}
-
-	if err = config.Load(c, previousSettings.Config); err != nil {
-		return PreviousSettings{}, err
-	}
-
-	if err = set.Load(s, previousSettings.Set); err != nil {
 		return PreviousSettings{}, err
 	}
 
@@ -70,4 +58,12 @@ func SaveSettings(configPath, setPath string) error {
 
 	_, err = w.Write(b)
 	return err
+}
+
+func FileExists(name string) bool {
+	if _, err := os.Stat(name); err != nil || os.IsNotExist(err) {
+		return false
+	}
+
+	return true
 }

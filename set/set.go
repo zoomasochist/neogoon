@@ -81,10 +81,16 @@ func DecompressZip(filePath, out string) error {
 		}
 		defer outWriter.Close()
 
-		archiveFile, _ := f.Open()
+		archiveFile, err := f.Open()
+		if err != nil {
+			return err
+		}
 		defer archiveFile.Close()
 
-		io.Copy(outWriter, archiveFile)
+		_, err = io.Copy(outWriter, archiveFile)
+		if err != nil {
+			return err
+		}
 	}
 
 	return nil
