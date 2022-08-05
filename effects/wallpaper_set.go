@@ -1,7 +1,6 @@
 package effects
 
 import (
-	"fmt"
 	"image"
 	"math/rand"
 	"os"
@@ -44,7 +43,6 @@ func SetWallpaper(annoyanceController <-chan int) {
 			}
 
 			ratio := float32(meta.Width) / float32(meta.Height)
-			fmt.Println(img, ratio)
 			if ratio > 1.7 && ratio < 2. {
 				wallpaperPool = append(wallpaperPool, img)
 			}
@@ -55,7 +53,6 @@ func SetWallpaper(annoyanceController <-chan int) {
 	}
 
 	if len(wallpaperPool) == 0 {
-		fmt.Println("n/a fit")
 		wallpaperPool = s.Images
 	}
 
