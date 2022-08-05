@@ -5,6 +5,7 @@ import (
 	effects "neogoon/effects"
 	set "neogoon/set"
 	"os"
+	"runtime"
 
 	_ "embed"
 	"fmt"
@@ -57,19 +58,19 @@ func Main() {
 	var configLoaded bool
 
 	previous, err := LoadPreviousSettings(&c, &s)
-	if err != nil {
-		dialog.Message(err.Error()).Error()
-	}
+	ErrIsFatal(err)
 
 	if len(previous.Set) != 0 {
 		filename := filepath.Base(previous.Set)
 		systrayCurrentPackage.SetTitle(fmt.Sprintln("Loaded set:", filename))
+		ErrIsFatal(set.Load(&s, previous.Set))
 	}
 	if len(previous.Config) != 0 {
 		filename := filepath.Base(previous.Config)
 		configLoaded = true
 		systrayStart.Enable()
 		systrayCurrentConfig.SetTitle(fmt.Sprintln("Loaded config:", filename))
+		ErrIsFatal(config.Load(&c, previous.Config))
 	}
 
 	for {
@@ -81,32 +82,34 @@ func Main() {
 			effects.Start(&c, &s)
 		case <-systrayLoadConfig.ClickedCh:
 			configPath, err = LoadConfig(&c)
+			ErrIsFatal(err)
+
 			filename := filepath.Base(configPath)
-			if err != nil {
-				dialog.Message(err.Error()).Error()
-			} else {
-				systrayCurrentConfig.SetTitle(fmt.Sprintln("Loaded config:", filename))
-				if configLoaded && !running {
-					systrayStart.Enable()
-				}
+			systrayCurrentConfig.SetTitle(fmt.Sprintln("Loaded config:", filename))
+			if configLoaded && !running {
+				systrayStart.Enable()
 			}
 
 		case <-systrayLoadPackage.ClickedCh:
 			setPath, err = LoadSet(&s)
-			if err != nil {
-				dialog.Message(err.Error()).Error()
-			}
+			ErrIsFatal(err)
+
 			filename := filepath.Base(setPath)
 			systrayCurrentPackage.SetTitle(fmt.Sprintln("Loaded set:", filename))
 
 		case <-systrayQuit.ClickedCh:
 			err = SaveSettings(configPath, setPath)
-			if err != nil {
-				dialog.Message(err.Error()).Error()
-			}
+			ErrIsFatal(err)
+
 			systray.Quit()
-			os.Exit(0)
+			runtime.Goexit()
 		}
+	}
+}
+
+func ErrIsFatal(err error) {
+	if err != nil {
+		dialog.Message(err.Error()).Error()
 	}
 }
 

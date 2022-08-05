@@ -14,4 +14,5 @@ Gooning encouragement utility.
 
 # Build Instructions
 
-Just `go build`; on Windows you need GCC -- try https://jmeubank.github.io/tdm-gcc/.
+Just `go build`; on Windows you need GCC -- try https://jmeubank.github.io/tdm-gcc/, and build
+with `build_windows.bat` or it'll spawn a command prompt along with the UI.

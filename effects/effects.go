@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	config "neogoon/config"
 	set "neogoon/set"
-	"os"
+	"runtime"
 	"time"
 
 	"github.com/sqweek/dialog"
@@ -29,13 +29,19 @@ func Start(cfg *config.Config, p *set.Set) {
 		go OverwriteClipboard(annoyanceController)
 		annoyanceController <- StartEffects
 	}
+
 	if c.DriveFiller.Enabled {
 		go DriveFiller(annoyanceController)
+		annoyanceController <- StartEffects
+	}
+
+	if c.Wallpaper.Enabled {
+		go SetWallpaper(annoyanceController)
 		annoyanceController <- StartEffects
 	}
 }
 
 func Fault(message string) {
 	dialog.Message(message).Error()
-	os.Exit(1)
+	runtime.Goexit()
 }

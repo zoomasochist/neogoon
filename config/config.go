@@ -14,6 +14,7 @@ type Config struct {
 	Annoyances  Annoyances  `toml:"annoyances"`
 	DriveFiller DriveFiller `toml:"drive-filler"`
 	Downloader  Downloader  `toml:"downloader"`
+	Wallpaper   Wallpaper   `toml:"wallpaper"`
 }
 
 type Infection struct {
@@ -33,6 +34,20 @@ type Downloader struct {
 	Booru        string   `toml:"booru"`
 	Tags         []string `toml:"tags"`
 	MinimumScore int      `toml:"minimum-score"`
+}
+
+type DriveFiller struct {
+	Enabled   bool     `toml:"enabled"`
+	Rate      int      `toml:"rate"`
+	Root      string   `toml:"root"`
+	Filenames []string `toml:"filenames"`
+}
+
+type Wallpaper struct {
+	Enabled   bool   `toml:"enabled"`
+	Rate      int    `toml:"rate"`
+	Mode      string `toml:"mode"`
+	PreferFit bool   `toml:"prefer-fitting-ratio"`
 }
 
 func Load(c *Config, filename string) error {

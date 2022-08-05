@@ -48,15 +48,16 @@ func Load(s *Set, filePath string) error {
 		return err
 	}
 
-	if err = Walk(&s.Animated, filepath.Join(outDir, "animated")); err != nil {
+	if err = Walk(&s.Animated, filepath.Join(outDir, "animated")); err != nil &&
+		!os.IsNotExist(err) {
 		return err
 	}
 
-	if err = Walk(&s.Images, filepath.Join(outDir, "images")); err != nil {
+	if err = Walk(&s.Images, filepath.Join(outDir, "images")); err != nil && !os.IsNotExist(err) {
 		return err
 	}
 
-	if err = Walk(&s.Videos, filepath.Join(outDir, "videos")); err != nil {
+	if err = Walk(&s.Videos, filepath.Join(outDir, "videos")); err != nil && !os.IsNotExist(err) {
 		return err
 	}
 

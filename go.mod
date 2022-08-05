@@ -5,6 +5,7 @@ go 1.18
 require (
 	github.com/BurntSushi/toml v1.2.0
 	github.com/getlantern/systray v1.2.1
+	github.com/reujab/wallpaper v0.0.0-20210630195606-5f9f655b3740
 	github.com/sqweek/dialog v0.0.0-20220729164723-0e168706f490
 	golang.design/x/clipboard v0.6.2
 )
@@ -23,4 +24,6 @@ require (
 	golang.org/x/image v0.0.0-20211028202545-6944b10bf410 // indirect
 	golang.org/x/mobile v0.0.0-20210716004757-34ab1303b554 // indirect
 	golang.org/x/sys v0.0.0-20210510120138-977fb7262007 // indirect
+	gopkg.in/ini.v1 v1.62.0 // indirect
+	gopkg.in/yaml.v2 v2.4.0 // indirect
 )

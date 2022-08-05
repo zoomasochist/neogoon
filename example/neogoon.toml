@@ -127,3 +127,22 @@ root = '~'
 # plus some random numbers.
 # Loaded sets can override this.
 filenames = ['NEOGOON']
+
+# Wallpaper randomly changes your wallpaper.
+[wallpaper]
+enabled = true
+# The amount of time (in milliseconds) between times your wallpaper is changed.
+rate = 1000
+# The crop mode to use when setting the wallpaper.
+# The possible options are:
+#   fit: resize while maintaining aspect ratio, leaving black bars if the image ratio doesn't fit.
+#   crop: rezize until no black bars remain while maintaining aspect ratio.
+#   stretch: resize without maintaining aspect ratio.
+#   span: the same as stretch, but stretched to cross all monitors.
+#   tile: don't resize the image, repeat it until it fills the display.
+#   center: don't resize the image, place it in the centre of the display leaving black bars.
+mode = 'stretch'
+# Prefer to set images as the wallpaper if they roughly match a 16:9 aspect ratio.
+# If none are found, random images will be used as if this were false.
+# If only one image is found, that'll be the only wallpaper.
+prefer-fitting-ratio = true
