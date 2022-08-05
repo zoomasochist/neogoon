@@ -105,7 +105,7 @@ press-enter = false
 
 # Overwrite clipboard will randomly overwrite your clipboard with supplied phrases.
 [annoyances.overwrite-clipboard]
-chance = 100
+chance = 0
 
 # Open websites randomly opens web pages.
 [annoyances.open-websites]
@@ -114,10 +114,10 @@ chance = 25
 
 # Drive filler fills your disk with images from a specified source.
 [drive-filler]
-enabled = true
-# The amount of time (in seconds) between each image save. This is a separate clock from
+enabled = false
+# The amount of time (in milliseconds) between each image save. This is a separate clock from
 # annoyances'.
-rate = 1
+rate = 300
 # The path for drive-filler to fill. Neogoon will not try to save images in any directory
 # above this one - but it will select random subdirectories to save to.
 # A couple of substitutions are allowed here - the character ~ will be replaced with your home

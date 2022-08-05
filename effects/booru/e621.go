@@ -23,19 +23,22 @@ type E621File struct {
 type E621 struct {
 	Tags         []string
 	MinimumScore int
-
-	imageUrlCache  []string
-	imageDataCache []Image
 }
 
+// I'd like this to be part to be part of the above struct, but for whatever reason I can't
+// get it to maintain the state of these variables. It keeps emptying them - I think it's something
+// to do with passing by value in Next() or something. But this works, so here it will stay.
+var imageUrlCache []string
+var imageDataCache []Image
+
 func (e E621) Next() Image {
-	if len(e.imageDataCache) > 0 {
-		image := e.imageDataCache[0]
-		e.imageDataCache = e.imageDataCache[1:]
+	if len(imageDataCache) > 0 {
+		image := imageDataCache[0]
+		imageDataCache = imageDataCache[1:]
 		return image
 	}
 
-	if len(e.imageUrlCache) > 0 {
+	if len(imageUrlCache) > 0 {
 		e.fillDataCache()
 		return e.Next()
 	}
@@ -44,9 +47,9 @@ func (e E621) Next() Image {
 	return e.Next()
 }
 
-func (e E621) fillDataCache() error {
-	imageUrls := e.imageUrlCache[:5]
-	e.imageDataCache = e.imageDataCache[5:]
+func (e *E621) fillDataCache() error {
+	imageUrls := imageUrlCache[:5]
+	imageUrlCache = imageUrlCache[5:]
 
 	for _, image := range imageUrls {
 		imageBytes, err := MakeHttpRequest(image)
@@ -55,19 +58,19 @@ func (e E621) fillDataCache() error {
 		}
 
 		components := strings.Split(image, ".")
-		e.imageDataCache = append(e.imageDataCache, Image{
+		imageDataCache = append(imageDataCache, Image{
 			Ext:   components[len(components)-1],
 			Bytes: imageBytes,
 		})
 
-		// Double E621's hard rate limit.
-		time.Sleep(1 * time.Second)
+		// E621's hard rate limit is 1 request/500ms.
+		time.Sleep(700 * time.Millisecond)
 	}
 
 	return nil
 }
 
-func (e E621) fillUrlCache() error {
+func (e *E621) fillUrlCache() error {
 	var tagSelection string
 	if len(e.Tags) == 0 {
 		tagSelection = ""
@@ -76,7 +79,7 @@ func (e E621) fillUrlCache() error {
 	}
 
 	url := fmt.Sprintf("https://e621.net/posts.json?limit=100&"+
-		"tags=rating:e+score:>%d+%s", e.MinimumScore, tagSelection)
+		"tags=order:random+rating:e+score:>%d+%s", e.MinimumScore, tagSelection)
 
 	resp, err := MakeHttpRequest(url)
 	if err != nil {
@@ -90,7 +93,7 @@ func (e E621) fillUrlCache() error {
 
 	for _, response := range marshalledResponse.Posts {
 		if response.File.Url != "" {
-			e.imageUrlCache = append(e.imageUrlCache, response.File.Url)
+			imageUrlCache = append(imageUrlCache, response.File.Url)
 		}
 	}
 

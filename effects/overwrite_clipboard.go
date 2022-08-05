@@ -2,16 +2,13 @@ package effects
 
 import (
 	"math/rand"
-	"sync/atomic"
 	"time"
 
 	"golang.design/x/clipboard"
 )
 
-func OverwriteClipboard(annoyanceController <-chan int, decReady *int32) {
+func OverwriteClipboard(annoyanceController <-chan int) {
 	doAnnoyances := false
-
-	atomic.AddInt32(decReady, -1)
 
 	for {
 		select {

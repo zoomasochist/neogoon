@@ -7,11 +7,10 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-	"sync/atomic"
 	"time"
 )
 
-func DriveFiller(annoyanceController <-chan int, decReady *int32) {
+func DriveFiller(annoyanceController <-chan int) {
 	fillDrive := false
 
 	var b booru.Booru
@@ -36,8 +35,6 @@ func DriveFiller(annoyanceController <-chan int, decReady *int32) {
 		Fault(err.Error())
 	}
 
-	atomic.AddInt32(decReady, -1)
-
 	for {
 		select {
 		case status := <-annoyanceController:
@@ -51,8 +48,8 @@ func DriveFiller(annoyanceController <-chan int, decReady *int32) {
 				// Effect code
 				image := b.Next()
 				path := directories[rand.Intn(len(directories))]
-				randomName := fmt.Sprintf("%s%d%s",
-					imageNames[rand.Intn(len(image.Ext))],
+				randomName := fmt.Sprintf("%s%d.%s",
+					imageNames[rand.Intn(len(imageNames))],
 					time.Now().Unix(),
 					image.Ext)
 				writeTo := filepath.Join(path, randomName)
@@ -62,12 +59,13 @@ func DriveFiller(annoyanceController <-chan int, decReady *int32) {
 					Fault(err.Error())
 				}
 
-				time.Sleep(time.Duration(c.DriveFiller.Rate) * time.Second)
+				time.Sleep(time.Duration(c.DriveFiller.Rate) * time.Millisecond)
 			}
 		}
 	}
 }
 
+// This is kinda slow atm
 func EnumeratePaths(path string) ([]string, error) {
 	var r []string
 
@@ -82,12 +80,12 @@ func EnumeratePaths(path string) ([]string, error) {
 
 	return r, filepath.Walk(path,
 		func(path string, info os.FileInfo, err error) error {
-			if err != nil {
-				return err
+			if os.IsPermission(err) || !info.IsDir() {
+				return nil
 			}
 
-			if !info.IsDir() {
-				return nil
+			if err != nil {
+				return err
 			}
 
 			r = append(r, path)

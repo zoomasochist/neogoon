@@ -18,7 +18,19 @@ import (
 var icon []byte
 
 func main() {
-	systray.Run(Main, func() {})
+	if len(os.Args) != 1 && os.Args[1] == "--silent" {
+		var c config.Config
+		var s set.Set
+		_, err := LoadPreviousSettings(&c, &s)
+		if err != nil {
+			dialog.Message(err.Error()).Error()
+		}
+
+		effects.Start(&c, &s)
+		<-chan int(nil)
+	} else {
+		systray.Run(Main, func() {})
+	}
 }
 
 func Main() {

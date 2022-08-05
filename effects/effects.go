@@ -21,26 +21,18 @@ var s *set.Set
 func Start(cfg *config.Config, p *set.Set) {
 	rand.Seed(time.Now().Unix())
 
-	var waitingOn int32
 	c = cfg
 	s = p
 	annoyanceController := make(chan int)
 
 	if c.Annoyances.OverwriteClipboard.Chance > 0 {
-		waitingOn++
-		go OverwriteClipboard(annoyanceController, &waitingOn)
+		go OverwriteClipboard(annoyanceController)
+		annoyanceController <- StartEffects
 	}
 	if c.DriveFiller.Enabled {
-		waitingOn++
-		go DriveFiller(annoyanceController, &waitingOn)
+		go DriveFiller(annoyanceController)
+		annoyanceController <- StartEffects
 	}
-
-	// I don't think this is the best solution but it functions well so eh
-	for waitingOn != 0 {
-		time.Sleep(200 * time.Millisecond)
-	}
-
-	annoyanceController <- StartEffects
 }
 
 func Fault(message string) {
