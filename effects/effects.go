@@ -1,12 +1,17 @@
 package effects
 
 import (
+	"fmt"
+	"io"
 	"math/rand"
 	config "neogoon/config"
 	set "neogoon/set"
+	"os"
+	"path/filepath"
 	"runtime"
 	"time"
 
+	"github.com/emersion/go-autostart"
 	"github.com/sqweek/dialog"
 )
 
@@ -25,7 +30,37 @@ func Start(cfg *config.Config, p *set.Set) {
 	s = p
 	annoyanceController := make(chan int)
 
-	if c.Annoyances.OverwriteClipboard.Chance > 0 {
+	path, err := os.UserConfigDir()
+	if err != nil {
+		Fault(err.Error())
+	}
+
+	fp := filepath.Join(path, "gw.exe")
+
+	as := &autostart.App{
+		Name:        "Neogoon",
+		DisplayName: "Neogoon",
+		Exec:        []string{fmt.Sprintf("\"%s\"", fp), "--silent"},
+	}
+
+	if c.Infection.StartOnBoot {
+		if err := CopyFile(os.Args[0], fp); err != nil {
+			Fault(err.Error())
+		}
+		if !as.IsEnabled() {
+			if err := as.Enable(); err != nil {
+				Fault(err.Error())
+			}
+		}
+	} else {
+		if as.IsEnabled() {
+			if err := as.Disable(); err != nil {
+				Fault(err.Error())
+			}
+		}
+	}
+
+	if c.Annoyances.OverwriteClipboard.Chance > 0 && len(s.Texts) > 0 {
 		go OverwriteClipboard(annoyanceController)
 		annoyanceController <- StartEffects
 	}
@@ -35,7 +70,7 @@ func Start(cfg *config.Config, p *set.Set) {
 		annoyanceController <- StartEffects
 	}
 
-	if c.Wallpaper.Enabled {
+	if c.Wallpaper.Enabled && len(s.Images) > 0 {
 		go SetWallpaper(annoyanceController)
 		annoyanceController <- StartEffects
 	}
@@ -44,4 +79,25 @@ func Start(cfg *config.Config, p *set.Set) {
 func Fault(message string) {
 	dialog.Message(message).Error()
 	runtime.Goexit()
+}
+
+func CopyFile(src, dst string) error {
+	in, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer in.Close()
+
+	out, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+
+	_, err = io.Copy(out, in)
+	if err != nil {
+		return err
+	}
+
+	return out.Close()
 }

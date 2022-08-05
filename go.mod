@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/BurntSushi/toml v1.2.0
+	github.com/emersion/go-autostart v0.0.0-20210130080809-00ed301c8e9a
 	github.com/getlantern/systray v1.2.1
 	github.com/reujab/wallpaper v0.0.0-20210630195606-5f9f655b3740
 	github.com/sqweek/dialog v0.0.0-20220729164723-0e168706f490

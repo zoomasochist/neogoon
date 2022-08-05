@@ -62,7 +62,7 @@ func SaveSettings(configPath, setPath string) error {
 
 	confPath := filepath.Join(dir, "neogoon.json")
 
-	w, err := os.OpenFile(confPath, os.O_CREATE|os.O_RDWR, 0644)
+	w, err := os.Create(confPath)
 	if err != nil {
 		return err
 	}

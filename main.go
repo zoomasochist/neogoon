@@ -52,12 +52,12 @@ func Main() {
 
 	var c config.Config
 	var s set.Set
-	var configPath string
-	var setPath string
+	/*var configPath string
+	var setPath string*/
 	var running bool
-	var configLoaded bool
+	//var configLoaded bool
 
-	previous, err := LoadPreviousSettings(&c, &s)
+	/*previous, err := LoadPreviousSettings(&c, &s)
 	ErrIsFatal(err)
 
 	if len(previous.Set) != 0 {
@@ -72,6 +72,7 @@ func Main() {
 		systrayCurrentConfig.SetTitle(fmt.Sprintln("Loaded config:", filename))
 		ErrIsFatal(config.Load(&c, previous.Config))
 	}
+	*/
 
 	for {
 		select {
@@ -81,25 +82,25 @@ func Main() {
 			systrayStart.Disable()
 			effects.Start(&c, &s)
 		case <-systrayLoadConfig.ClickedCh:
-			configPath, err = LoadConfig(&c)
+			configPath, err := LoadConfig(&c)
 			ErrIsFatal(err)
 
 			filename := filepath.Base(configPath)
 			systrayCurrentConfig.SetTitle(fmt.Sprintln("Loaded config:", filename))
-			if configLoaded && !running {
+			if !running {
 				systrayStart.Enable()
 			}
 
 		case <-systrayLoadPackage.ClickedCh:
-			setPath, err = LoadSet(&s)
+			setPath, err := LoadSet(&s)
 			ErrIsFatal(err)
 
 			filename := filepath.Base(setPath)
 			systrayCurrentPackage.SetTitle(fmt.Sprintln("Loaded set:", filename))
 
 		case <-systrayQuit.ClickedCh:
-			err = SaveSettings(configPath, setPath)
-			ErrIsFatal(err)
+			/*err := SaveSettings(configPath, setPath)
+			ErrIsFatal(err)*/
 
 			systray.Quit()
 			runtime.Goexit()

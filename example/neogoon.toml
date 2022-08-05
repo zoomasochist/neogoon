@@ -1,5 +1,6 @@
 [infection]
 start-on-boot = false
+# After starting, hide the tray icon.
 hide-systray = false
 
 # When hibernate is enabled, Neogoon will not immediately begin executing

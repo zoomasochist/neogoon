@@ -46,9 +46,6 @@ func SetWallpaper(annoyanceController <-chan int) {
 			if ratio > 1.7 && ratio < 2. {
 				wallpaperPool = append(wallpaperPool, img)
 			}
-
-			// Chill
-			time.Sleep(100 * time.Millisecond)
 		}
 	}
 
