@@ -15,7 +15,6 @@ type Config struct {
 	Hiberate    Hibernate   `toml:"hibernate"`
 	Annoyances  Annoyances  `toml:"annoyances"`
 	DriveFiller DriveFiller `toml:"drive-filler"`
-	Downloader  Downloader  `toml:"downloader"`
 	Wallpaper   Wallpaper   `toml:"wallpaper"`
 }
 
