@@ -9,18 +9,10 @@ import (
 	"github.com/BurntSushi/toml"
 )
 
-type Downloader struct {
-	Enabled      bool     `toml:"enabled"`
-	Booru        string   `toml:"booru"`
-	Tags         []string `toml:"tags"`
-	MinimumScore int      `toml:"minimum-score"`
-}
-
 type Set struct {
-	Urls       []string   `toml:"urls"`
-	Texts      []string   `toml:"texts"`
-	Downloader Downloader `toml:"downloader"`
-	Filenames  []string   `toml:"filenames"`
+	Urls      []string `toml:"urls"`
+	Texts     []string `toml:"texts"`
+	Filenames []string `toml:"filenames"`
 
 	Animated []string
 	Images   []string

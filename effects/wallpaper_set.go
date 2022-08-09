@@ -2,6 +2,8 @@ package effects
 
 import (
 	"image"
+	_ "image/jpeg"
+	_ "image/png"
 	"math/rand"
 	"os"
 	"time"

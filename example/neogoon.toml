@@ -8,7 +8,7 @@ hide-systray = false
 # of time (within a defined range), execute payloads for a set amount of time,
 # and then go back to hibernating.
 [hibernate]
-enabled = true
+enabled = false
 # In seconds, the minimum amount of time Neogoon will sit idley before doing
 # anything.
 minimum-wait = 1
@@ -17,24 +17,6 @@ maximum-wait = 120
 # How long (again, in seconds) Neogoon will execute payloads for while out of
 # hibernation.
 activity-time = 120
-
-# The downloader can be used to save images from specified boorus matching specified tags.
-# When enabled, annoyances (see below) will source images from the downloader, rather than
-# the loaded set (if any).
-[downloader]
-enabled = true
-# Supported boorus are: e621
-booru = 'e621'
-# The tags to search the booru for. Whenever an image is grabbed to be saved, a random string
-# in this list will be chosen - that is, each string in this list can contain multiple tags,
-# each string will be searched for separately.
-# This can be empty; Neogoon will then accept any image.
-tags = [
-    'feral+paw_focus',
-    'feral+presenting_hindquarters'
-]
-# The minimum post score to consider
-minimum-score = 50
 
 # Annoyances are the core of Neogoon - they define the audiovisual (and more)
 # effects it will have on your computer.
@@ -52,10 +34,7 @@ rate = 1
 # They can be configured to only be closed manually, or to close after a given
 # amount of time.
 [annoyances.popups]
-chance = 50
-# The media that may appear in popups.
-# Possible values are images, animated, and videos.
-media = ["images", "animated", "videos"]
+chance = 100
 # Popup transparency. 100 is opaque, 1 is almost transparent.
 opacity = 100
 # % chance an image will be in "denial mode". An image selected to be in this
@@ -93,7 +72,7 @@ max-mistakes = 2
 [annoyances.audio]
 # If a track is already playing when another audio annoyance is chosen, it is ignored and the
 # previous audio track continues.
-chance = 25
+chance = 0
 # Audio tracks over this length (in seconds) will be stopped early.
 max-playtime = 15
 volume = 25
@@ -110,8 +89,7 @@ chance = 0
 
 # Open websites randomly opens web pages.
 [annoyances.open-websites]
-enabled = true
-chance = 25
+chance = 0
 
 # Drive filler fills your disk with images from a specified source.
 [drive-filler]
@@ -129,9 +107,24 @@ root = '~'
 # Loaded sets can override this.
 filenames = ['NEOGOON']
 
+# The downloader can be used to save images from specified boorus matching specified tags.
+[drive-filler.downloader]
+# Supported boorus are: e621
+booru = 'e621'
+# The tags to search the booru for. Whenever an image is grabbed to be saved, a random string
+# in this list will be chosen - that is, each string in this list can contain multiple tags,
+# each string will be searched for separately.
+# This can be empty; Neogoon will then accept any image.
+tags = [
+    'feral+paw_focus',
+    'feral+presenting_hindquarters'
+]
+# The minimum post score to consider
+minimum-score = 50
+
 # Wallpaper randomly changes your wallpaper.
 [wallpaper]
-enabled = true
+enabled = false
 # The amount of time (in milliseconds) between times your wallpaper is changed.
 rate = 1000
 # The crop mode to use when setting the wallpaper.

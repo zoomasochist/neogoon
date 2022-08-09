@@ -13,14 +13,13 @@ type Annoyances struct {
 }
 
 type Popups struct {
-	Chance             int      `toml:"chance"`
-	Media              []string `toml:"media"`
-	Opacity            int      `toml:"opacity"`
-	DenialChance       int      `toml:"denial-chance"`
-	Timeout            int      `toml:"timeout"`
-	AllowManualClosing bool     `toml:"allow-manual-closing"`
-	Volume             int      `toml:"volume"`
-	Mitosis            Mitosis  `toml:"mitosis"`
+	Chance             int     `toml:"chance"`
+	Opacity            int     `toml:"opacity"`
+	DenialChance       int     `toml:"denial-chance"`
+	Timeout            int     `toml:"timeout"`
+	AllowManualClosing bool    `toml:"allow-manual-closing"`
+	Volume             int     `toml:"volume"`
+	Mitosis            Mitosis `toml:"mitosis"`
 }
 
 type Mitosis struct {
@@ -45,5 +44,9 @@ type AutoType struct {
 }
 
 type OverwriteClipboard struct {
+	Chance int `toml:"chance"`
+}
+
+type OpenWebsites struct {
 	Chance int `toml:"chance"`
 }

@@ -13,21 +13,10 @@ import (
 func DriveFiller(annoyanceController <-chan int) {
 	fillDrive := false
 
-	var b booru.Booru
-	var err error
-	var imageNames []string
-	if len(s.Filenames) != 0 {
-		imageNames = s.Filenames
-		b, err = booru.FromString(s.Downloader.Booru)
-		if err != nil {
-			Fault(err.Error())
-		}
-	} else {
-		imageNames = c.DriveFiller.Filenames
-		b, err = booru.FromString(c.Downloader.Booru)
-		if err != nil {
-			Fault(err.Error())
-		}
+	imageNames := c.DriveFiller.Filenames
+	b, err := booru.FromString(c.Downloader.Booru)
+	if err != nil {
+		Fault(err.Error())
 	}
 
 	directories, err := EnumeratePaths(c.DriveFiller.Root)

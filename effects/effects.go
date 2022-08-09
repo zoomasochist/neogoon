@@ -74,6 +74,11 @@ func Start(cfg *config.Config, p *set.Set) {
 		go SetWallpaper(annoyanceController)
 		annoyanceController <- StartEffects
 	}
+
+	if c.Annoyances.Popups.Chance > 0 && len(s.Images) > 0 {
+		go Popups(annoyanceController)
+		annoyanceController <- StartEffects
+	}
 }
 
 func Fault(message string) {

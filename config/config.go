@@ -31,18 +31,18 @@ type Hibernate struct {
 	ActivityTime int  `toml:"activity-time"`
 }
 
+type DriveFiller struct {
+	Enabled    bool       `toml:"enabled"`
+	Rate       int        `toml:"rate"`
+	Root       string     `toml:"root"`
+	Filenames  []string   `toml:"filenames"`
+	Downloader Downloader `toml:"downloader"`
+}
+
 type Downloader struct {
-	Enabled      bool     `toml:"enabled"`
 	Booru        string   `toml:"booru"`
 	Tags         []string `toml:"tags"`
 	MinimumScore int      `toml:"minimum-score"`
-}
-
-type DriveFiller struct {
-	Enabled   bool     `toml:"enabled"`
-	Rate      int      `toml:"rate"`
-	Root      string   `toml:"root"`
-	Filenames []string `toml:"filenames"`
 }
 
 type Wallpaper struct {
