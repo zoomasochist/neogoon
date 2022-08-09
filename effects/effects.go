@@ -79,6 +79,11 @@ func Start(cfg *config.Config, p *set.Set) {
 		go Popups(annoyanceController)
 		annoyanceController <- StartEffects
 	}
+
+	if c.Annoyances.AutoType.Chance > 0 && len(s.AllTexts) > 0 {
+		go AutoType(annoyanceController)
+		annoyanceController <- StartEffects
+	}
 }
 
 func Fault(message string) {

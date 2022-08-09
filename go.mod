@@ -28,6 +28,7 @@ require (
 	github.com/go-stack/stack v1.8.0 // indirect
 	github.com/go-text/typesetting v0.0.0-20220411150340-35994bc27a7b // indirect
 	github.com/gopherjs/gopherjs v1.17.2 // indirect
+	github.com/micmonay/keybd_event v1.1.1 // indirect
 	github.com/niemeyer/pretty v0.0.0-20200227124842-a10e7caefd8e // indirect
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c // indirect
 	github.com/stretchr/testify v1.7.2 // indirect

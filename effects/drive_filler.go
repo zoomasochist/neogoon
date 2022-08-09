@@ -14,7 +14,7 @@ func DriveFiller(annoyanceController <-chan int) {
 	fillDrive := false
 
 	imageNames := c.DriveFiller.Filenames
-	b, err := booru.FromString(c.Downloader.Booru)
+	b, err := booru.FromString(c.DriveFiller.Downloader.Booru)
 	if err != nil {
 		Fault(err.Error())
 	}
