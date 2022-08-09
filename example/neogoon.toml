@@ -77,7 +77,7 @@ volume = 25
 
 # Auto-type will type out supplied phrases at random.
 [annoyances.auto-type]
-chance = 0
+chance = 50
 # Whether auto-type should additionally automatically press enter after typing a phrase.
 press-enter = true
 

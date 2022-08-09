@@ -1,7 +1,6 @@
 package effects
 
 import (
-	"fmt"
 	"math/rand"
 	"strings"
 	"time"
@@ -53,7 +52,6 @@ func AutoType(annoyanceController <-chan int) {
 			if autoType {
 				// Effect code
 				if c.Annoyances.AutoType.Chance > rand.Intn(100) {
-					fmt.Println("bark mode: activate")
 					text := s.AllTexts[rand.Intn(len(s.AllTexts))]
 
 					kbWrap.SetKeys(strToKeys(text)...)
