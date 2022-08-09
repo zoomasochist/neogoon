@@ -12,7 +12,10 @@ import (
 type Set struct {
 	Urls      []string `toml:"urls"`
 	Texts     []string `toml:"texts"`
+	Prompts   []string `toml:"prompts"`
 	Filenames []string `toml:"filenames"`
+
+	AllTexts []string
 
 	Animated []string
 	Images   []string
@@ -39,6 +42,8 @@ func Load(s *Set, filePath string) error {
 	if err != nil {
 		return err
 	}
+
+	s.AllTexts = append(s.Texts, s.Prompts...)
 
 	if err = Walk(&s.Animated, filepath.Join(outDir, "animated")); err != nil &&
 		!os.IsNotExist(err) {

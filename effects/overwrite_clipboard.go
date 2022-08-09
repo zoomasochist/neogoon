@@ -22,7 +22,7 @@ func OverwriteClipboard(annoyanceController <-chan int) {
 			if doAnnoyances {
 				// Effect code
 				if c.Annoyances.OverwriteClipboard.Chance > rand.Intn(100) {
-					text := s.Texts[rand.Intn(len(s.Texts))]
+					text := s.AllTexts[rand.Intn(len(s.AllTexts))]
 					clipboard.Write(clipboard.FmtText, []byte(text))
 				}
 

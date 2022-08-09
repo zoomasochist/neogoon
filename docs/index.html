@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neogoon</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
+
+    <style>
+@media (min-width: 1200px) {
+    .container {
+        width: 900px;
+    }
+}
+
+.navbar {
+    background-color: white;
+    width: 100%;
+}
+
+li p {
+    margin-bottom: 0.2rem;
+}
+
+.good-thing {
+    color: green;
+}
+
+.bad-thing {
+    color: rgb(206, 0, 0);
+}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg sticky-top">
+            <div class="container-fluid">
+                
+              <a class="navbar-brand" href="#home">Neogoon</a>
+              <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+              </button>
+
+              <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="#introduction">
+                            Introduction
+                        </a>
+                    </li>         
+                    
+                    
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="#comparison">Comparison</a>
+                    </li>     
+
+                  <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#documentation" role="button"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                      Documentation
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="#neogoontoml"><code>
+                        neogoon.toml
+                        </code></a></li>
+                        <li><a class="dropdown-item" href="#sets">Sets</a></li>
+                        <li><a class="dropdown-item" href="#functional">What Works</a></li>
+                        <li><a class="dropdown-item" href="#get-started">Getting started</a></li>
+                        <li><a class="dropdown-item" href="#developers">Developers</a></li>
+                    </ul>
+                  </li>
+
+                </ul>
+              </div>
+            </div>
+          </nav>
+
+        <h1 id="home">Neogoon</h1>
+        <p><em><strong>Gooning encouragement utility.</strong>
+            <a href="https://github.com/zoomasochist/neogoon/releases">
+                Latest release.
+            </a></em></p>
+
+        <h2 id="introduction">Introduction</h2>
+        <p>
+            Neogoon is a gooning encouragement utility functionally inspired by Edgeware, in turn
+            inspired by Elsavirus. Like Edgeware, it is open source:
+            <a href="https://github.com/zoomasochist/neogoon">
+                https://github.com/zoomasochist/neogoon</a>.
+        </p>
+        <p>
+            Neogoon was founded out of frustration with Edgeware's poor maintenance record and
+            user experience, so while Neogoon "does the same thing" as Edgeware, it sets out to do
+            it better in every possible way.
+        </p>
+        <p>
+            Neogoon is still a work-in-progress. Some features may not work properly, and some may
+            not be implemented at all. But I hope it currently and continues to serve you well.
+        </p>
+
+        <h2 id="comparison">Comparison</h2>
+        <div class="row">
+            <div class="col-6">
+                <h4>Neogoon</h4>
+                <ul>
+                    <li><p class="good-thing">Actively developed</p></li>
+                    <li><p class="good-thing">Single dependency-free binary</p></li>
+                    <li><p class="good-thing">Works on macOS, Linux, and Windows</p></li>
+                    <li><p>Configured through a text file (web configurator WIP)</p></li>
+                    <li><p class="bad-thing">Some things don't work yet</p></li>
+                    <li><p class="bad-thing">Incompatible package format</p></li>
+                </ul>
+            </div>
+            <div class="col-6">
+                <h4>Edgeware</h4>
+                <ul>
+                    <li><p class="good-thing">More mature</p></li>
+                    <li><p class="good-thing">More packages</p></li>
+                    <li><p>Configured through a GUI</p></li>
+                    <li><p class="bad-thing">Sees little maintenance</p></li>
+                    <li><p class="bad-thing">Has to be installed</p></li>
+                    <li><p class="bad-thing">Only works on Windows</p></li>
+                    <li><p class="bad-thing">Requires Python</p></li>
+                    <li><p class="bad-thing">Poor UX</p></li>
+                </ul>
+            </div>
+        </div>
+
+        <h2 id="documentation">Documentation</h2>
+        <h3 id="neogoontoml"><code>neogoon.toml</code></h3>
+        <p>
+            <code>neogoon.toml</code> is where the Neogoon client is configured, rather than from
+            a graphical interface à la Edgeware.
+        </p>
+        <p>
+            The <a href="https://github.com/zoomasochist/neogoon/blob/master/example/neogoon.toml">
+                example <code>neogoon.toml</code>
+            </a> is very well documented, so its efforts won't be duplicated here.
+        </p>
+
+        <h3 id="sets">Sets</h3>
+        <p>Sets are what Neogoon calls packages.</p>
+        <p>
+            Sets, as they are loaded into Neogoon, are zip files containing directories for assorted
+            media, and a <code>set.toml</code> at the root to configure the set and provide textual
+            data.
+        </p>
+        <p>
+            In Neogoon, all directories used for storing media (e.g. images) can contain further
+            images to compartmentalise their content. Nested folders will be followed and
+            additionally searched for relevant media.
+        </p>
+        <p>
+            A simple uncompressed set would look something like this:
+            <pre><code>
+    \---MySet
+    |   set.toml
+    |
+    \---images
+            image.png
+            </code></pre>
+        </p>
+        <h4>File: <code>set.toml</code></h4>
+        <p>
+            <code>set.toml</code> is a <a href="https://toml.io/en/">TOML</a> file that configures
+            the set with textual content, and a few settings.
+        </p>
+        <p>The following entries are expected:</p>
+
+        <h5><code>urls</code></h5>
+        <p>
+            An array of string URLs that may be opened as part of the <code>open-websites</code>
+            annoyance.
+        </p>
+
+        <h5><code>texts</code></h5>
+        <p>
+            An array of strings used in a variety of places — they're overlayed over popups and
+            sent as notifications, for example. You should probably mix a collection of short and
+            long texts, and shouldn't be written in first person. Use <code>prompts</code> for that.
+        </p>
+
+        <h5><code>prompts</code></h5>
+        <p>
+            Prompts are like <code>texts</code>, but used specifically for text (usually) written in
+            first person. Prompts will be presented along-side a text box, and the gooner will have
+            to repeat the text in the text box to close it. They should probably be demeaning.
+        </p>
+
+        <h5><code>filenames</code></h5>
+        <p>
+            An array of strings used with the <code>drive-filler</code> annoyance. When enabled,
+            these filenames will be chosen from as the name of images that are saved.
+        </p>
+
+        <h4>Directory: <code>images</code></h4>
+        <p>
+            The <code>images</code> directory contains images used for Neogoon features like
+            popups and wallpaper setting. PNGs and JPGs are officially supported.
+        </p>
+
+        <h4>Directory: <code>animated</code></h4>
+        <p>
+            The <code>animated</code> directory contains animated (but not video) media used for
+            popups. The only supported format will be GIF, but there isn't support for animated
+            popups yet.
+        </p>
+
+        <h4>Directory: <code>videos</code></h4>
+        <p>
+            The <code>videos</code> directory contains videos used for popups. There isn't support
+            for videos popups yet, so the list supported formats is indeterminate.
+        </p>
+
+        <h3 id="functional">What Works</h3>
+        <div class="row">
+            <div class="col-6">
+                <h4>Functional</h4>
+                <ul>
+                    <li>
+                        Starting on boot
+                    </li>
+                    <li>
+                        Hiding the systray icon
+                    </li>
+                    <li>
+                        Popups*
+                    </li>
+                    <li>
+                        Overwriting clipboard
+                    </li>
+                    <li>
+                        Drive filler
+                    </li>
+                    <li>
+                        Wallpaper setter
+                    </li>
+                </ul>
+            </div>
+            <div class="col-6">
+                <h4>Planned</h4>
+                <ul>
+                    <li>
+                        Prompts
+                    </li>
+                    <li>
+                        Hibernation
+                    </li>
+                    <li>
+                        Auto Type
+                    </li>
+                    <li>
+                        Opening websites
+                    </li>
+                    <li>
+                        Audio
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <p><em>*: Images only, no videos or GIFs.</em></p>
+
+        <h3 id="get-started">Getting started</h3>
+        <h4>Configure your <code>neogoon.toml</code></h4>
+        <p>
+            Grab the
+                <a href="https://github.com/zoomasochist/neogoon/blob/master/example/neogoon.toml">
+                example <code>neogoon.toml</code></a> (click "Raw", right click and
+                "Save Page As...") and save it somewhere sensible. The example
+                <code>neogoon.toml</code> is also used for testing Neogoon, so it probably won't
+                exactly suit your needs — it's best to thoroughly read it and configure it to your
+                liking before continuing. Every configurable part of Neogoon should make sense,
+                so if something doesn't, please report it!
+        </p>
+        <h4>Grab a set</h4>
+        <p>
+            Sets contain the media that Neogoon applies your configuration to, and aren't included.
+            You're welcome to give this one a try — it's about furries:
+            <ul>
+                <li>TODO</li>
+            </ul>
+            You can save this anywhere, but it's best to put it somewhere it can stay (so not your
+            downloads folder).
+        </p>
+        <h4>Download Neogoon</h4>
+        <p>
+            Download the <a href="https://github.com/zoomasochist/neogoon/releases">
+                latest release
+            </a> of Neogoon for your operating system and run it. You should be presented with a
+            popup telling you it's ready. From there, you can access Neogoon from your system tray.
+            Click "Load config" and "Load set" to load your configuration and set respectively, then
+            click "Start".
+        </p>
+        <p>
+            Note that some anti-virus software may purport Neogoon is malware (understandably).
+            There's not a lot I can do about that. Sorry. Just ignore it! :)
+        </p>
+
+        <h3 id="developers">Developers</h3>
+        <p>
+            Hacking on (and hopefully improving) Neogoon is encouraged!
+        </p>
+        <h4>Building</h4>
+        <p>
+            Neogoon is written in Go, so building is very easy.
+            On Linux and macOS, it should only require:
+            <pre><code>
+                $ git clone https://github.com/zoomasochist/neogoon
+                $ cd neogoon
+                $ go build
+                $ ./neogoon
+            </code></pre>
+            On Windows the process is very similar, but you may have to install GCC (for CGO).
+            The easiest way to get GCC working on Windows is
+            <a href="https://jmeubank.github.io/tdm-gcc/">https://jmeubank.github.io/tdm-gcc/</a>.
+        </p>
+        
+        <!-- /container -->
+        <br><br><br><br><br><br>
+    </div>
+</body>
+</html>

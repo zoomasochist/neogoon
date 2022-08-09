@@ -60,7 +60,7 @@ func Start(cfg *config.Config, p *set.Set) {
 		}
 	}
 
-	if c.Annoyances.OverwriteClipboard.Chance > 0 && len(s.Texts) > 0 {
+	if c.Annoyances.OverwriteClipboard.Chance > 0 && len(s.AllTexts) > 0 {
 		go OverwriteClipboard(annoyanceController)
 		annoyanceController <- StartEffects
 	}
