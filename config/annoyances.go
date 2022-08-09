@@ -18,7 +18,6 @@ type Popups struct {
 	DenialChance       int     `toml:"denial-chance"`
 	Timeout            int     `toml:"timeout"`
 	AllowManualClosing bool    `toml:"allow-manual-closing"`
-	Volume             int     `toml:"volume"`
 	Mitosis            Mitosis `toml:"mitosis"`
 }
 

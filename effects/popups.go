@@ -41,50 +41,7 @@ func Popups(annoyanceController <-chan int) {
 			if doPopups {
 				// Effect code
 				if c.Annoyances.Popups.Chance > rand.Intn(100) {
-					imgPath := s.Images[rand.Intn(len(s.Images))]
-					f, err := os.Open(imgPath)
-					if err != nil {
-						panic(err)
-					}
-
-					m, _, err := image.Decode(f)
-					if err != nil {
-						panic(err)
-					}
-
-					f.Close()
-
-					//topLeft := rand.Intn(displayX)
-					//height := rand.Intn(displayY)
-
-					imageX := m.Bounds().Dx()
-					imageY := m.Bounds().Dy()
-
-					modX := imageX / displayX
-					modY := imageY / displayY
-
-					var maxMod int
-					if modX > modY {
-						maxMod = modX + 1
-					} else {
-						maxMod = modY + 1
-					}
-
-					imgWidth := (imageX / maxMod) / 2
-					imgHeight := (imageY / maxMod) / 2
-
-					resizedImage := image.NewRGBA(image.Rect(0, 0, imgWidth, imgHeight))
-					// Other options in order of performance/quality ratio:
-					// ApproxBiLinear, BiLinear, CatmullRom
-					draw.NearestNeighbor.Scale(resizedImage, resizedImage.Rect, m, m.Bounds(),
-						draw.Over, nil)
-
-					closeAfter := -1
-					if c.Annoyances.Popups.Timeout != 0 {
-						closeAfter = c.Annoyances.Popups.Timeout
-					}
-
-					go SpawnPopup(resizedImage, imgWidth, imgHeight, closeAfter)
+					go SpawnPopup(displayX, displayY)
 				}
 
 				time.Sleep(time.Duration(c.Annoyances.Rate) * time.Second)
@@ -93,15 +50,78 @@ func Popups(annoyanceController <-chan int) {
 	}
 }
 
-func SpawnPopup(img image.Image, width, height, closeAfter int) {
+func SpawnPopup(displayX, displayY int) {
+	imgPath := s.Images[rand.Intn(len(s.Images))]
+	f, err := os.Open(imgPath)
+	if err != nil {
+		panic(err)
+	}
+
+	m, _, err := image.Decode(f)
+	if err != nil {
+		panic(err)
+	}
+
+	f.Close()
+
+	//topLeft := rand.Intn(displayX)
+	//height := rand.Intn(displayY)
+
+	imageX := m.Bounds().Dx()
+	imageY := m.Bounds().Dy()
+
+	modX := imageX / displayX
+	modY := imageY / displayY
+
+	var maxMod int
+	if modX > modY {
+		maxMod = modX + 1
+	} else {
+		maxMod = modY + 1
+	}
+
+	imgWidth := (imageX / maxMod) / 2
+	imgHeight := (imageY / maxMod) / 2
+
+	resizedImage := image.NewRGBA(image.Rect(0, 0, imgWidth, imgHeight))
+	// Other options in order of performance/quality ratio:
+	// ApproxBiLinear, BiLinear, CatmullRom
+	draw.NearestNeighbor.Scale(resizedImage, resizedImage.Rect, m, m.Bounds(),
+		draw.Over, nil)
+
+	buttonSize := 0
+	if c.Annoyances.Popups.AllowManualClosing {
+		buttonSize = 35
+	}
+
+	windowWidth := unit.Dp(imgWidth)
+	windowHeight := unit.Dp(imgHeight + buttonSize)
+
 	w := app.NewWindow()
 	w.Option(app.Decorated(false))
-	w.Option(app.Size(unit.Dp(width), unit.Dp(height)+35))
+	w.Option(app.Size(windowWidth, windowHeight))
+	// I assume there's a cleaner way to do this, but I'm not a Gio guru.
+	w.Option(app.MinSize(windowWidth, windowHeight))
+	w.Option(app.MaxSize(windowWidth, windowHeight))
 	w.Option(app.Title("Submit <3"))
 	th := material.NewTheme(gofont.Collection())
-	var ops op.Ops
 
+	var ops op.Ops
 	var closeButtonWidget widget.Clickable
+
+	if c.Annoyances.Popups.Timeout != 0 {
+		go func() {
+			time.Sleep(time.Duration(c.Annoyances.Popups.Timeout) * time.Second)
+			w.Perform(system.ActionClose)
+
+			if c.Annoyances.Popups.Mitosis.TriggeredByTimeout {
+				for i := 0; i < c.Annoyances.Popups.Mitosis.Strength; i++ {
+					go SpawnPopup(displayX, displayY)
+				}
+			}
+		}()
+	}
+
 	for {
 		e := <-w.Events()
 		switch e := e.(type) {
@@ -116,7 +136,7 @@ func SpawnPopup(img image.Image, width, height, closeAfter int) {
 			}.Layout(gtx,
 				layout.Rigid(
 					func(gtx layout.Context) layout.Dimensions {
-						imageOp := paint.NewImageOp(img)
+						imageOp := paint.NewImageOp(resizedImage)
 						imageOp.Add(&ops)
 						op.Affine(f32.Affine2D{}.Scale(f32.Pt(0, 0), f32.Pt(4, 4)))
 						paint.PaintOp{}.Add(&ops)
@@ -137,6 +157,10 @@ func SpawnPopup(img image.Image, width, height, closeAfter int) {
 
 			if closeButtonWidget.Clicked() {
 				w.Perform(system.ActionClose)
+
+				for i := 0; i < c.Annoyances.Popups.Mitosis.Strength; i++ {
+					go SpawnPopup(displayX, displayY)
+				}
 			}
 
 			e.Frame(gtx.Ops)
