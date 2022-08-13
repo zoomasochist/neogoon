@@ -67,9 +67,9 @@ func DecompressZip(filePath, out string) error {
 
 	for _, f := range r.File {
 		filePath := filepath.Join(out, f.Name)
-		if f.FileInfo().IsDir() {
-			os.MkdirAll(filePath, 0644)
-			continue
+		err := os.MkdirAll(filepath.Dir(filePath), 0644)
+		if err != nil {
+			return err
 		}
 
 		outWriter, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
