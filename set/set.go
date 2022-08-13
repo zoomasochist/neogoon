@@ -61,31 +61,36 @@ func Load(s *Set, filePath string) error {
 	return nil
 }
 
-func DecompressZip(filePath, out string) error {
-	r, _ := zip.OpenReader(filePath)
+func DecompressZip(zipPath, out string) error {
+	r, _ := zip.OpenReader(zipPath)
 	defer r.Close()
 
 	for _, f := range r.File {
 		filePath := filepath.Join(out, f.Name)
-		err := os.MkdirAll(filepath.Dir(filePath), 0644)
-		if err != nil {
+		if f.FileInfo().IsDir() {
+			if err := os.MkdirAll(filePath, os.ModePerm); err != nil {
+				return err
+			}
+			continue
+		}
+
+		if err := os.MkdirAll(filepath.Dir(filePath), os.ModePerm); err != nil {
 			return err
 		}
 
-		outWriter, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
+		destinationFile, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, f.Mode())
 		if err != nil {
 			return err
 		}
-		defer outWriter.Close()
+		defer destinationFile.Close()
 
-		archiveFile, err := f.Open()
+		zippedFile, err := f.Open()
 		if err != nil {
 			return err
 		}
-		defer archiveFile.Close()
+		defer zippedFile.Close()
 
-		_, err = io.Copy(outWriter, archiveFile)
-		if err != nil {
+		if _, err := io.Copy(destinationFile, zippedFile); err != nil {
 			return err
 		}
 	}
