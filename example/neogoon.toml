@@ -28,7 +28,7 @@ enabled = true
 # when it is 2, and so on.
 # Annoyances can stack. If two annoyances have a 100% chance to occur, they will
 # both occur every tick.
-rate = 1
+rate = 5
 
 # Popups are immovable windows that appear in random locations on your screen.
 # They can be configured to only be closed manually, or to close after a given

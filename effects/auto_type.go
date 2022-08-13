@@ -35,11 +35,6 @@ var symbol = map[string]int{
 func AutoType(annoyanceController <-chan int) {
 	autoType := false
 
-	kbWrap, err := keybd_event.NewKeyBonding()
-	if err != nil {
-		panic(err)
-	}
-
 	for {
 		select {
 		case status := <-annoyanceController:
@@ -54,13 +49,9 @@ func AutoType(annoyanceController <-chan int) {
 				if c.Annoyances.AutoType.Chance > rand.Intn(100) {
 					text := s.AllTexts[rand.Intn(len(s.AllTexts))]
 
-					kbWrap.SetKeys(strToKeys(text)...)
-					kbWrap.Press()
-					kbWrap.Release()
-					if c.Annoyances.AutoType.PressEnter {
-						kbWrap.SetKeys(keybd_event.VK_ENTER)
-						kbWrap.Press()
-						kbWrap.Release()
+					err := TypeKeys(text, c.Annoyances.AutoType.PressEnter)
+					if err != nil {
+						panic(err)
 					}
 				}
 
@@ -70,37 +61,89 @@ func AutoType(annoyanceController <-chan int) {
 	}
 }
 
-// https://git.tcp.direct/kayos/sendkeys
-func handleRunes(split []string) (keys []int) {
-	for _, c := range split {
-		d, dok := num[c]
-		a, aok := alpha[c]
-		sym, symok := symbol[c]
-		ca, caok := alpha[strings.ToLower(c)]
+func TypeKeys(s string, pressEnter bool) error {
+	kbWrap, err := keybd_event.NewKeyBonding()
+	if err != nil {
+		return err
+	}
 
-		switch {
-		case aok:
-			keys = append(keys, a)
-		case dok:
-			keys = append(keys, d)
-		case caok:
-			keys = append(keys, 0-ca)
-		case symok:
-			keys = append(keys, sym)
+	for _, section := range strings.Split(s, " ") {
+		chars := strings.Split(section, "")
+		for _, c := range chars {
+			d, dok := num[c]
+			a, aok := alpha[c]
+			sym, symok := symbol[c]
+			ca, caok := alpha[strings.ToLower(c)]
+
+			switch {
+			case aok:
+				kbWrap.SetKeys(a)
+				kbWrap.Launching()
+			case dok:
+				kbWrap.SetKeys(d)
+				kbWrap.Launching()
+			case caok:
+				kbWrap.HasSHIFT(true)
+				kbWrap.SetKeys(ca)
+				kbWrap.Launching()
+				kbWrap.HasSHIFT(false)
+			case symok:
+				kbWrap.SetKeys(sym)
+				kbWrap.Launching()
+			}
 		}
+		// Space
+		kbWrap.SetKeys(57)
+		kbWrap.Launching()
 	}
-	return
+
+	if pressEnter {
+		kbWrap.SetKeys(keybd_event.VK_ENTER)
+		kbWrap.Launching()
+	}
+
+	return nil
 }
 
-func strToKeys(s string) (keys []int) {
-	if !strings.Contains(s, " ") {
-		return handleRunes(strings.Split(s, ""))
+/*
+func TypeKeys(s string) error {
+	kbWrap, err := keybd_event.NewKeyBonding()
+	if err != nil {
+		return err
 	}
-	splitspace := strings.Split(s, " ")
-	for _, section := range splitspace {
-		split := strings.Split(section, "")
-		keys = append(keys, handleRunes(split)...)
-		keys = append(keys, 57)
+
+	for _, section := range strings.Split(s, " ") {
+		chars := strings.Split(section, "")
+		for _, c := range chars {
+			d, dok := num[c]
+			a, aok := alpha[c]
+			sym, symok := symbol[c]
+			ca, caok := alpha[strings.ToLower(c)]
+
+			switch {
+			case aok:
+				kbWrap.HasSHIFT(false)
+				kbWrap.SetKeys(a)
+			case dok:
+				kbWrap.HasSHIFT(false)
+				kbWrap.SetKeys(d)
+			case caok:
+				kbWrap.HasSHIFT(true)
+				kbWrap.SetKeys(ca)
+			case symok:
+				kbWrap.HasSHIFT(false)
+				kbWrap.SetKeys(sym)
+			}
+			err = kbWrap.Launching()
+			if err != nil {
+				return err
+			}
+		}
+		// Space
+		kbWrap.SetKeys(57)
+		kbWrap.Launching()
 	}
-	return
+
+	return nil
 }
+*/
