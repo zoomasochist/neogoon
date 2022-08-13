@@ -54,6 +54,7 @@ func Audio(annoyanceController <-chan int) {
 					case "ogg":
 						streamer, format, _ = vorbis.Decode(f)
 					}
+
 					speaker.Init(format.SampleRate, format.SampleRate.N(time.Second/10))
 					ctrl.Streamer = streamer
 					ctrl.Paused = false
@@ -64,6 +65,7 @@ func Audio(annoyanceController <-chan int) {
 						Volume: (float64((c.Annoyances.Audio.Volume * 2)) - 200) / 100,
 					}
 					speaker.Play(beep.Seq(volume, beep.Callback(func() {
+						time.Sleep(time.Duration(c.Annoyances.Rate) * time.Second)
 						currentlyPlaying = false
 					})))
 
@@ -77,8 +79,6 @@ func Audio(annoyanceController <-chan int) {
 
 					currentlyPlaying = true
 				}
-
-				time.Sleep(time.Duration(c.Annoyances.Rate) * time.Second)
 			}
 		}
 	}

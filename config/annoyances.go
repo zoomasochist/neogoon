@@ -10,6 +10,7 @@ type Annoyances struct {
 	Audio              Audio              `toml:"audio"`
 	AutoType           AutoType           `toml:"auto-type"`
 	OverwriteClipboard OverwriteClipboard `toml:"overwrite-clipboard"`
+	OpenWebsites       OpenWebsites       `toml:"open-websites"`
 }
 
 type Popups struct {

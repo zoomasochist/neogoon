@@ -89,6 +89,11 @@ func Start(cfg *config.Config, p *set.Set) {
 		go Audio(annoyanceController)
 		annoyanceController <- StartEffects
 	}
+
+	if c.Annoyances.OpenWebsites.Chance > 0 && len(s.Urls) > 0 {
+		go OpenWebsites(annoyanceController)
+		annoyanceController <- StartEffects
+	}
 }
 
 func Fault(message string) {
