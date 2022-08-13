@@ -18,6 +18,7 @@ type Set struct {
 	AllTexts []string
 
 	Animated []string
+	Audio    []string
 	Images   []string
 	Videos   []string
 }
@@ -55,6 +56,10 @@ func Load(s *Set, filePath string) error {
 	}
 
 	if err = Walk(&s.Videos, filepath.Join(outDir, "videos")); err != nil && !os.IsNotExist(err) {
+		return err
+	}
+
+	if err = Walk(&s.Audio, filepath.Join(outDir, "audio")); err != nil && !os.IsNotExist(err) {
 		return err
 	}
 

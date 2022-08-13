@@ -72,12 +72,13 @@ max-mistakes = 2
 # previous audio track continues.
 chance = 0
 # Audio tracks over this length (in seconds) will be stopped early.
-max-playtime = 15
-volume = 25
+# 0 = unlimited.
+max-playtime = 5
+volume = 40
 
 # Auto-type will type out supplied phrases at random.
 [annoyances.auto-type]
-chance = 50
+chance = 0
 # Whether auto-type should additionally automatically press enter after typing a phrase.
 press-enter = true
 

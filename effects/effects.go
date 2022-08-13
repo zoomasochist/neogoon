@@ -84,6 +84,11 @@ func Start(cfg *config.Config, p *set.Set) {
 		go AutoType(annoyanceController)
 		annoyanceController <- StartEffects
 	}
+
+	if c.Annoyances.Audio.Chance > 0 && len(s.Audio) > 0 {
+		go Audio(annoyanceController)
+		annoyanceController <- StartEffects
+	}
 }
 
 func Fault(message string) {
