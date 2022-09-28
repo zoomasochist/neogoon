@@ -34,7 +34,7 @@ rate = 5
 # They can be configured to only be closed manually, or to close after a given
 # amount of time.
 [annoyances.popups]
-chance = 0
+chance = 100
 # Popup transparency. 100 is opaque, 1 is almost transparent.
 opacity = 100
 # % chance an image will be in "denial mode". An image selected to be in this
@@ -89,6 +89,10 @@ chance = 0
 # Open websites randomly opens web pages.
 [annoyances.open-websites]
 chance = 0
+
+# Send notifications
+[annoyances.notifications]
+chance = 100
 
 # Drive filler fills your disk with images from a specified source.
 [drive-filler]

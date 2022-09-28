@@ -94,6 +94,11 @@ func Start(cfg *config.Config, p *set.Set) {
 		go OpenWebsites(annoyanceController)
 		annoyanceController <- StartEffects
 	}
+
+	if c.Annoyances.Notifications.Chance > 0 && len(s.AllTexts) > 0 {
+		go Notifications(annoyanceController)
+		annoyanceController <- StartEffects
+	}
 }
 
 func Fault(message string) {

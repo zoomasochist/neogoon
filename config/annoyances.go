@@ -11,6 +11,7 @@ type Annoyances struct {
 	AutoType           AutoType           `toml:"auto-type"`
 	OverwriteClipboard OverwriteClipboard `toml:"overwrite-clipboard"`
 	OpenWebsites       OpenWebsites       `toml:"open-websites"`
+	Notifications      Notifications      `toml:"notifications"`
 }
 
 type Popups struct {
@@ -48,5 +49,9 @@ type OverwriteClipboard struct {
 }
 
 type OpenWebsites struct {
+	Chance int `toml:"chance"`
+}
+
+type Notifications struct {
 	Chance int `toml:"chance"`
 }

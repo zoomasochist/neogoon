@@ -79,7 +79,7 @@ func (e *E621) fillUrlCache() error {
 	}
 
 	url := fmt.Sprintf("https://e621.net/posts.json?limit=100&"+
-		"tags=-animated+order:random+rating:e+score:>%d+%s", e.MinimumScore, tagSelection)
+		"tags=order:random+score:>%d+%s", e.MinimumScore, tagSelection)
 
 	resp, err := MakeHttpRequest(url)
 	if err != nil {
